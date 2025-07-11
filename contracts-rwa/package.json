@@ -1,0 +1,27 @@
+{
+  "name": "rwa-marketplace",
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "npx hardhat run scripts/deploy.js --network chiliz",
+    "mint": "npx hardhat run scripts/mint.js --network chiliz",
+    "test": "npx hardhat test",
+    "test:coverage": "npx hardhat coverage",
+    "test:live": "npx hardhat run scripts/test-live.js --network chiliz",
+    "test:contract": "npx hardhat run scripts/test-contract.js --network chiliz",
+    "test:advanced": "npx hardhat run scripts/advanced-test.js --network chiliz",
+    "deploy:test": "npx hardhat run scripts/deploy-and-test.js --network chiliz"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.1",
+    "@openzeppelin/contracts": "^4.9.2",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.20.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "ethereum-waffle": "^3.4.4",
+    "solidity-coverage": "^0.8.2"
+  }
+}
