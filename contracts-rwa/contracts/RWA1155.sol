@@ -41,10 +41,12 @@ contract RWA1155 is ERC1155, Ownable {
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {
+        require(_tokenIds.current() > 0 && tokenId <= _tokenIds.current(), "RWA1155: URI query for nonexistent token");
         return rwaMetadata[tokenId].metadataURI;
     }
 
     function getRWA(uint256 tokenId) public view returns (RWAData memory) {
+        require(_tokenIds.current() > 0 && tokenId <= _tokenIds.current(), "RWA1155: RWA query for nonexistent token");
         return rwaMetadata[tokenId];
     }
 }
