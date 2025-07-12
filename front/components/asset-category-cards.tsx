@@ -19,7 +19,7 @@ const initialCategories = [
   {
     name: 'Sport',
     icon: IconBallFootball,
-    href: '#',
+    href: '/dashboard/market?category=Sport',
     videoUrl: '/video/sport.mp4',
     glowColor: 'from-orange-500/30 to-orange-400/30',
     id: 'sport',
@@ -30,7 +30,7 @@ const initialCategories = [
   {
     name: 'E-Sport',
     icon: IconDeviceGamepad2,
-    href: '#',
+    href: '/dashboard/market?category=E-Sport',
     videoUrl: '/video/esport.mp4',
     glowColor: 'from-purple-600/30 to-purple-500/30',
     id: 'esport',
@@ -41,7 +41,7 @@ const initialCategories = [
   {
     name: 'Music',
     icon: IconMusic,
-    href: '#',
+    href: '/dashboard/market?category=Music',
     videoUrl: '/video/kpop.mp4',
     glowColor: 'from-sky-500/30 to-sky-400/30',
     id: 'music',
@@ -52,7 +52,7 @@ const initialCategories = [
   {
     name: 'Real Estate',
     icon: IconHome,
-    href: '#',
+    href: '/dashboard/market?category=Real Estate',
     videoUrl: '/video/real.mp4',
     glowColor: 'from-emerald-500/30 to-emerald-400/30',
     id: 'real-estate',
@@ -137,7 +137,7 @@ const CardSlot = ({
           {isFeatured && (
             <div
               className={cn(
-                'flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-semibold',
+                'flex items-center gap-1 rounded-full px-2.5 py-5 text-sm font-semibold',
                 activeCategory.performance >= 0
                   ? 'bg-green-500 text-white'
                   : 'bg-red-500 text-white'
@@ -158,12 +158,12 @@ const CardSlot = ({
             <>
               <h3 className="text-4xl font-bold text-white">{activeCategory.name}</h3>
               <p className="max-w-md text-lg text-neutral-300">{activeCategory.description}</p>
-              <Link href={activeCategory.href} className="mt-2">
-                <Button size="lg" className="bg-white text-black hover:bg-neutral-200 font-bold group/button">
+              <div className="mt-2">
+                <Button size="lg" className="bg-white text-black hover:bg-neutral-200 font-bold group/button pointer-events-none">
                   {activeCategory.cta}
                   <IconChevronRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover/button:translate-x-1" />
                 </Button>
-              </Link>
+              </div>
             </>
           )}
         </div>
@@ -201,15 +201,19 @@ export function AssetCategoryCards() {
 
   return (
     <div className="relative grid h-[46rem] grid-cols-1 grid-rows-4 gap-6 md:grid-cols-3 md:grid-rows-2">
-      <div className="md:col-span-2 md:row-span-2">
+      <Link href={getCategory(0).href} className="md:col-span-2 md:row-span-2">
         <CardSlot activeCategory={getCategory(0)} layout="featured" />
-      </div>
-      <div className="md:col-span-1">
+      </Link>
+      <Link href={getCategory(1).href} className="md:col-span-1">
         <CardSlot activeCategory={getCategory(1)} layout="small-rect" />
-      </div>
+      </Link>
       <div className="grid grid-cols-2 gap-6 md:col-span-1">
-        <CardSlot activeCategory={getCategory(2)} layout="small-square" />
-        <CardSlot activeCategory={getCategory(3)} layout="small-square" />
+        <Link href={getCategory(2).href}>
+          <CardSlot activeCategory={getCategory(2)} layout="small-square" />
+        </Link>
+        <Link href={getCategory(3).href}>
+          <CardSlot activeCategory={getCategory(3)} layout="small-square" />
+        </Link>
       </div>
     </div>
   );

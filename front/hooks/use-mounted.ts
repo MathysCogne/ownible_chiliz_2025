@@ -1,6 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
-export const useMounted = () => {
+export function useMounted() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -8,4 +10,4 @@ export const useMounted = () => {
   }, []);
 
   return mounted;
-}; 
+} 
