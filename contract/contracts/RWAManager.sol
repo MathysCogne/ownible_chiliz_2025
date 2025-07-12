@@ -33,7 +33,7 @@ contract RWAManager is ERC1155, ERC1155Holder {
     modifier onlyAdmin() {
         require(msg.sender == admin, "Not admin");
         _;
-    }
+    
 
     modifier onlyAuthorized() {
         require(authorizedIssuers[msg.sender], "Not authorized");
