@@ -35,10 +35,16 @@ Imagine owning a fraction of a classic album's rights, a piece of iconic sports 
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, shadcn/ui
-- **Wallet**: wagmi, Viem, WalletConnect
-- **Blockchain**: Chiliz Chain, Solidity, Hardhat, Ethers.js
-- **Decentralized Storage**: IPFS for metadata
+**Address Contract:**
+- 0x0000000000000000000000000000000000000000
+
+- Next.js
+- Tailwind CSS
+- Shadcn UI
+- Solidity
+- Hardhat
+- Ethers.js
+- React
 
 ---
 
