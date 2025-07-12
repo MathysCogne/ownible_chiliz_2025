@@ -4,7 +4,7 @@ import { AssetCategoryCards } from '@/components/asset-category-cards';
 
 export default function DashboardPage() {
   return (
-    <div>
+      <div>
       <AssetCategoryCards />
     </div>
   );

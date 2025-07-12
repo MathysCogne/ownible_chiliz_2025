@@ -43,7 +43,7 @@ export const LandingPage = () => {
           {title}
         </div>
         <div className="text-xs md:text-xl xl:text-2xl 2xl:text-3xl mt-2 text-white font-bold normal-case">
-          {subtitle}
+            {subtitle}
         </div>
       </div>
 

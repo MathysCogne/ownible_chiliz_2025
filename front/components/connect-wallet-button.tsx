@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,27 +12,28 @@ import {
 } from '@/components/ui/drawer';
 import { useRouter } from 'next/navigation';
 import { type Connector } from 'wagmi';
+import { useMounted } from '@/hooks/use-mounted';
 
 export function ConnectWalletButton() {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
   const router = useRouter();
+  const mounted = useMounted();
+
+  useEffect(() => {
+    if (mounted && isConnected) {
+      router.push('/dashboard');
+    }
+  }, [mounted, isConnected, router]);
 
   const handleConnect = (connector: Connector) => {
     connect({ connector, chainId: 88882 });
   };
 
-  if (isConnected) {
-    router.push('/dashboard');
+  if (mounted && isConnected) {
     return (
-      <div className="flex items-center gap-4">
-        <p className="text-white">
-          {address?.slice(0, 6)}...{address?.slice(-4)}
-        </p>
-        <Button onClick={() => disconnect()} variant="outline">
-          Disconnect
-        </Button>
+      <div className="flex items-center justify-center bg-transparent py-3 px-8">
+        <p className="text-white font-bold">Redirecting to dashboard...</p>
       </div>
     );
   }
