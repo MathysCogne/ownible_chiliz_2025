@@ -27,7 +27,7 @@ export default function RwaDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [buyAmount, setBuyAmount] = useState('1')
   
-  const { writeContract, isPending: isBuyLoading, data: hash } = useWriteContract()
+  const { writeContract, isPending: isBuyLoading, error: buyError, data: hash } = useWriteContract()
 
   const isOwner = isConnected && address && contractOwner && address.toLowerCase() === contractOwner.toLowerCase()
   const isForSale = rwa && parseFloat(rwa.price) > 0
@@ -65,20 +65,36 @@ export default function RwaDetailPage() {
       }
   }, [hash])
 
+  useEffect(() => {
+    if(buyError) {
+        toast.error("Purchase Failed", {
+            description: buyError.message || "An unknown error occurred during the transaction."
+        })
+    }
+  }, [buyError])
+
 
   const handleBuy = async () => {
-      if (!rwa || !rwa.price) return;
+      if (!rwa || !rwa.price) {
+        toast.error("Asset price is not available.");
+        return;
+      }
+      try {
+        const totalValue = parseFloat(rwa.price) * parseInt(buyAmount, 10);
+        const valueInWei = parseEther(totalValue.toString());
 
-      const totalValue = parseFloat(rwa.price) * parseInt(buyAmount, 10);
-      const valueInWei = parseEther(totalValue.toString());
-
-      writeContract({
-          address: rwaContractAddress as `0x${string}`,
-          abi: rwaContractAbi,
-          functionName: 'buyRwa',
-          args: [BigInt(tokenId), BigInt(buyAmount)],
-          value: valueInWei,
-      })
+        writeContract({
+            address: rwaContractAddress as `0x${string}`,
+            abi: rwaContractAbi,
+            functionName: 'buyRwa',
+            args: [BigInt(tokenId), BigInt(buyAmount)],
+            value: valueInWei,
+        })
+      } catch (e) {
+          toast.error("Transaction Error", {
+              description: e instanceof Error ? e.message : "An unexpected error occurred."
+          })
+      }
   }
 
   if (isLoading) {
