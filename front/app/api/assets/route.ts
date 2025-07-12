@@ -1,77 +1,40 @@
-import { NextResponse } from "next/server"
-import { createPublicClient, formatEther, http } from "viem"
-
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/lib/contract"
-import { spicyTestnet } from "@/lib/wagmi"
-
-const publicClient = createPublicClient({
-  chain: spicyTestnet,
-  transport: http(),
-})
+import { NextResponse } from 'next/server';
+import { getContractInstance } from '@/lib/contract';
 
 export async function GET() {
   try {
-    const contract = {
-      read: {
-        getAssetCount: () =>
-          publicClient.readContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "getAssetCount",
-          }),
-        assets: (args: [bigint]) =>
-          publicClient.readContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "assets",
-            args,
-          }),
-        getFragmentInfo: (args: [bigint]) =>
-          publicClient.readContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "getFragmentInfo",
-            args,
-          }),
-      },
-    }
-
-    const assetCount = await contract.read.getAssetCount()
-    const assets = []
-
+    const contract = getContractInstance();
+    const assetCount = await contract.read.getAssetCount();
+    const assets = [];
+    
+    // Fix: Commence à 1, pas 0
     for (let i = 1; i <= Number(assetCount); i++) {
       try {
-        const asset = await contract.read.assets([BigInt(i)])
-        const fragmentInfo = await contract.read.getFragmentInfo([BigInt(i)])
-
+        const asset = await contract.read.assets([BigInt(i)]);
         assets.push({
           id: i,
           name: asset[0],
           category: asset[1],
-          valuation: formatEther(asset[2]),
+          valuation: asset[2].toString(),
           totalFragments: asset[3].toString(),
-          remainingFragments: asset[4].toString(),
-          isNFT: asset[5],
-          isTransferable: asset[6],
-          issuer: asset[7],
-          fragmentInfo: {
-            totalSupply: fragmentInfo[0].toString(),
-            availableSupply: fragmentInfo[1].toString(),
-            pricePerUnit: formatEther(fragmentInfo[2]),
-            isActive: fragmentInfo[3],
-          },
-        })
+          remainingFragments: asset[6].toString(), // Fix: index 6, pas 4
+          isNFT: asset[4],
+          isTransferable: asset[5],
+          owner: asset[7],
+          metadataURI: asset[8], // IPFS metadata URI
+          imageURI: asset[9]     // IPFS image URI
+        });
       } catch (error) {
-        console.error(`Error fetching asset ${i}:`, error)
+        console.error(`Error fetching asset ${i}:`, error);
       }
     }
-
-    return NextResponse.json({ assets })
+    
+    return NextResponse.json({ assets });
   } catch (error) {
-    console.error("Assets fetch error:", error)
+    console.error('Assets fetch error:', error);
     return NextResponse.json(
-      { error: "Failed to fetch assets" },
+      { error: 'Failed to fetch assets' },
       { status: 500 }
-    )
+    );
   }
 }

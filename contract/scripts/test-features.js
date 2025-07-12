@@ -56,6 +56,8 @@ async function main() {
                 1000, // 1000 fragments
                 false, // not NFT
                 true,  // transferable
+                "ipfs://QmExampleMetadataHash123456789", // metadataURI
+                "ipfs://QmExampleImageHash987654321",    // imageURI
                 { 
                     gasLimit: 800000,
                     gasPrice: gasPrice

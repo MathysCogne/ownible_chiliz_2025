@@ -1,7 +1,7 @@
 import { createPublicClient, http, getContract } from 'viem';
 import { spicyTestnet } from './wagmi';
 
-export const CONTRACT_ADDRESS = "0x6F8B7f23B72FAb6a30251bcD531A26800C038B89" as const;
+export const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32" as const;
 
 export const CONTRACT_ABI = [
   {
@@ -48,7 +48,9 @@ export const CONTRACT_ABI = [
       {"internalType": "uint256", "name": "valuation", "type": "uint256"},
       {"internalType": "uint256", "name": "totalFragments", "type": "uint256"},
       {"internalType": "bool", "name": "isNFT", "type": "bool"},
-      {"internalType": "bool", "name": "isTransferable", "type": "bool"}
+      {"internalType": "bool", "name": "isTransferable", "type": "bool"},
+      {"internalType": "string", "name": "metadataURI", "type": "string"},
+      {"internalType": "string", "name": "imageURI", "type": "string"}
     ],
     "name": "createAsset",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
@@ -56,18 +58,35 @@ export const CONTRACT_ABI = [
     "type": "function"
   },
   {
+    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
+    "name": "uri",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {"internalType": "uint256", "name": "assetId", "type": "uint256"},
-      {"internalType": "uint256", "name": "fragmentAmount", "type": "uint256"}
+      {"internalType": "string", "name": "newMetadataURI", "type": "string"}
     ],
-    "name": "purchaseFragments",
+    "name": "updateMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "assetId", "type": "uint256"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "buyFragments",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [{"internalType": "uint256", "name": "assetId", "type": "uint256"}],
-    "name": "purchaseFullOwnership",
+    "name": "buyFullOwnership",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -101,10 +120,12 @@ export const CONTRACT_ABI = [
       {"internalType": "string", "name": "category", "type": "string"},
       {"internalType": "uint256", "name": "valuation", "type": "uint256"},
       {"internalType": "uint256", "name": "totalFragments", "type": "uint256"},
-      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
       {"internalType": "bool", "name": "isNFT", "type": "bool"},
       {"internalType": "bool", "name": "isTransferable", "type": "bool"},
-      {"internalType": "address", "name": "issuer", "type": "address"}
+      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
+      {"internalType": "address", "name": "owner", "type": "address"},
+      {"internalType": "string", "name": "metadataURI", "type": "string"},
+      {"internalType": "string", "name": "imageURI", "type": "string"}
     ],
     "stateMutability": "view",
     "type": "function"
@@ -167,6 +188,8 @@ export interface Asset {
   isNFT: boolean;
   isTransferable: boolean;
   issuer: string;
+  metadataURI: string;
+  imageURI: string;
   fragmentInfo?: {
     totalSupply: string;
     availableSupply: string;

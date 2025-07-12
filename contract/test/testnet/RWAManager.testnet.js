@@ -8,7 +8,7 @@ describe("RWAManager - Testnet Tests", function () {
   let other;
   
   // Adresse du contrat déployé sur testnet (à remplacer par votre adresse)
-  const CONTRACT_ADDRESS = "0x6F8B7f23B72FAb6a30251bcD531A26800C038B89"; // Remplacer par l'adresse déployée
+  const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32"; // Nouvelle adresse
   
   const SAMPLE_ASSET = {
     name: "Testnet Property",

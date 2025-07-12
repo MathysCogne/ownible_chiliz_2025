@@ -6,7 +6,32 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/lib/contract';
 
 export async function POST(request: Request) {
   try {
-    const { name, category, valuation, totalFragments, isNFT, isTransferable } = await request.json();
+    const { 
+      name, 
+      category, 
+      valuation, 
+      totalFragments, 
+      isNFT, 
+      isTransferable, 
+      metadataURI, 
+      imageURI 
+    } = await request.json();
+
+    // Validate required fields
+    if (!name || !category || !valuation || !totalFragments) {
+      return NextResponse.json(
+        { error: 'Missing required fields: name, category, valuation, totalFragments' },
+        { status: 400 }
+      );
+    }
+
+    // Validate IPFS metadata URI is provided
+    if (!metadataURI || metadataURI.trim() === '') {
+      return NextResponse.json(
+        { error: 'Metadata URI is required for IPFS integration' },
+        { status: 400 }
+      );
+    }
 
     // You'll need to set your private key in environment variables
     const rawKey = process.env.PRIVATE_KEY;
@@ -27,12 +52,21 @@ export async function POST(request: Request) {
       transport: http(),
     });
 
-    // Create the asset
+    // Create the asset with IPFS metadata
     const hash = await walletClient.writeContract({
       address: CONTRACT_ADDRESS,
       abi: CONTRACT_ABI,
       functionName: 'createAsset',
-      args: [name, category, BigInt(valuation), BigInt(totalFragments), isNFT, isTransferable],
+      args: [
+        name, 
+        category, 
+        BigInt(valuation), 
+        BigInt(totalFragments), 
+        isNFT || false, 
+        isTransferable !== false, // Default to true if not specified
+        metadataURI,
+        imageURI || ""
+      ],
     });
 
     return NextResponse.json({

@@ -81,6 +81,8 @@ export function useCreateAsset() {
       totalFragments: number;
       isNFT?: boolean;
       isTransferable?: boolean;
+      metadataURI: string;     // Required now
+      imageURI?: string;
     }) => {
       return writeContract({
         address: CONTRACT_ADDRESS,
@@ -92,7 +94,9 @@ export function useCreateAsset() {
           parseEther(data.valuation),
           BigInt(data.totalFragments),
           data.isNFT || false,
-          data.isTransferable || true
+          data.isTransferable || true,
+          data.metadataURI,        // Required for IPFS
+          data.imageURI || ''
         ],
         gas: BigInt(800000),
         gasPrice: BigInt("2501000000000"),
@@ -131,7 +135,7 @@ export function usePurchaseFragments() {
       return writeContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: 'purchaseFragments',
+        functionName: 'buyFragments',
         args: [BigInt(data.assetId), BigInt(data.fragmentAmount)],
         value: BigInt(txParams.value),
         gas: BigInt(txParams.gasLimit),
@@ -171,7 +175,7 @@ export function usePurchaseFullOwnership() {
       return writeContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: 'purchaseFullOwnership',
+        functionName: 'buyFullOwnership',
         args: [BigInt(data.assetId)],
         value: BigInt(txParams.value),
         gas: BigInt(txParams.gasLimit),

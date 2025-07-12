@@ -14,6 +14,8 @@ contract RWAManager is ERC1155, ERC1155Holder {
         bool isTransferable;
         uint256 remainingFragments;
         address owner;
+        string metadataURI; // ← Nouveau champ IPFS
+        string imageURI;    // ← Nouveau champ pour l'image
     }
 
     mapping(uint256 => Asset) public assets;
@@ -24,8 +26,9 @@ contract RWAManager is ERC1155, ERC1155Holder {
     string public baseURI;
     uint256 private _currentAssetId = 1;
 
-    event AssetCreated(uint256 indexed assetId, string name, uint256 valuation);
+    event AssetCreated(uint256 indexed assetId, string name, uint256 valuation, string metadataURI);
     event FragmentsPurchased(uint256 indexed assetId, address indexed buyer, uint256 amount);
+    event MetadataUpdated(uint256 indexed assetId, string newMetadataURI);
 
     modifier onlyAdmin() {
         require(msg.sender == admin, "Not admin");
@@ -49,9 +52,12 @@ contract RWAManager is ERC1155, ERC1155Holder {
         uint256 valuation,
         uint256 totalFragments,
         bool isNFT,
-        bool isTransferable
+        bool isTransferable,
+        string memory metadataURI,  // ← Nouveau paramètre
+        string memory imageURI      // ← Nouveau paramètre
     ) external onlyAuthorized {
         require(valuation > 0 && totalFragments > 0, "Invalid parameters");
+        require(bytes(metadataURI).length > 0, "Metadata URI required");
 
         uint256 assetId = _currentAssetId;
         _currentAssetId++;
@@ -64,13 +70,29 @@ contract RWAManager is ERC1155, ERC1155Holder {
             isNFT: isNFT,
             isTransferable: isTransferable,
             remainingFragments: totalFragments,
-            owner: address(0)
+            owner: address(0),
+            metadataURI: metadataURI,
+            imageURI: imageURI
         });
 
-        // Utiliser _mint sans safe transfer pour éviter le problème ERC1155Receiver
         _mint(address(this), assetId, totalFragments, "");
 
-        emit AssetCreated(assetId, name, valuation);
+        emit AssetCreated(assetId, name, valuation, metadataURI);
+    }
+
+    // Nouvelle fonction pour récupérer l'URI d'un token
+    function uri(uint256 tokenId) public view override returns (string memory) {
+        require(tokenId < _currentAssetId, "Token does not exist");
+        return assets[tokenId].metadataURI;
+    }
+
+    // Nouvelle fonction pour mettre à jour les métadonnées
+    function updateMetadata(uint256 assetId, string memory newMetadataURI) external {
+        require(assetId < _currentAssetId, "Asset does not exist");
+        require(assets[assetId].owner == msg.sender || msg.sender == admin, "Not authorized");
+        
+        assets[assetId].metadataURI = newMetadataURI;
+        emit MetadataUpdated(assetId, newMetadataURI);
     }
 
     function buyFragments(uint256 assetId, uint256 amount) external payable {
@@ -126,7 +148,6 @@ contract RWAManager is ERC1155, ERC1155Holder {
         return _currentAssetId - 1;
     }
 
-    // Override required pour supporter les deux interfaces
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, ERC1155Holder) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
