@@ -1159,17 +1159,19 @@ function RwaDetailPage() {
             return;
         }
         try {
-            const totalValue = parseFloat(rwa.price) * parseInt(buyAmount, 10);
-            const valueInWei = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$ethers$40$6$2e$15$2e$0_bufferutil$40$4$2e$0$2e$9_utf$2d$8$2d$validate$40$5$2e$0$2e$10$2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$utils$2f$units$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseEther"])(totalValue.toString());
+            // Use BigInt for calculation to avoid floating point errors
+            const pricePerTokenWei = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$ethers$40$6$2e$15$2e$0_bufferutil$40$4$2e$0$2e$9_utf$2d$8$2d$validate$40$5$2e$0$2e$10$2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$utils$2f$units$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseEther"])(rwa.price);
+            const amountToBuy = BigInt(buyAmount);
+            const totalValueWei = pricePerTokenWei * amountToBuy;
             writeContract({
                 address: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$contract$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["rwaContractAddress"],
                 abi: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$contract$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["rwaContractAbi"],
                 functionName: 'buyRwa',
                 args: [
                     BigInt(tokenId),
-                    BigInt(buyAmount)
+                    amountToBuy
                 ],
-                value: valueInWei
+                value: totalValueWei
             });
         } catch (e) {
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$2$2e$0$2e$6_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error("Transaction Error", {
@@ -1185,14 +1187,14 @@ function RwaDetailPage() {
                     className: "h-12 w-1/4 mb-4"
                 }, void 0, false, {
                     fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                    lineNumber: 103,
+                    lineNumber: 105,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
                     className: "h-8 w-1/2 mb-8"
                 }, void 0, false, {
                     fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                    lineNumber: 104,
+                    lineNumber: 106,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1204,12 +1206,12 @@ function RwaDetailPage() {
                                 className: "w-full h-96"
                             }, void 0, false, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 107,
+                                lineNumber: 109,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                            lineNumber: 106,
+                            lineNumber: 108,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1220,12 +1222,12 @@ function RwaDetailPage() {
                                             className: "h-8 w-full mb-4"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 110,
+                                            lineNumber: 112,
                                             columnNumber: 35
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 112,
                                         columnNumber: 23
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1233,35 +1235,35 @@ function RwaDetailPage() {
                                             className: "h-40 w-full"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 110,
+                                            lineNumber: 112,
                                             columnNumber: 101
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 112,
                                         columnNumber: 88
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 110,
+                                lineNumber: 112,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                            lineNumber: 109,
+                            lineNumber: 111,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                    lineNumber: 105,
+                    lineNumber: 107,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-            lineNumber: 102,
+            lineNumber: 104,
             columnNumber: 7
         }, this);
     }
@@ -1271,7 +1273,7 @@ function RwaDetailPage() {
             children: error
         }, void 0, false, {
             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-            lineNumber: 118,
+            lineNumber: 120,
             columnNumber: 12
         }, this);
     }
@@ -1281,7 +1283,7 @@ function RwaDetailPage() {
             children: "RWA not found."
         }, void 0, false, {
             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-            lineNumber: 122,
+            lineNumber: 124,
             columnNumber: 12
         }, this);
     }
@@ -1300,7 +1302,7 @@ function RwaDetailPage() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                        lineNumber: 128,
+                        lineNumber: 130,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1308,13 +1310,13 @@ function RwaDetailPage() {
                         children: "Digital Asset Details"
                     }, void 0, false, {
                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                        lineNumber: 130,
+                        lineNumber: 132,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                lineNumber: 127,
+                lineNumber: 129,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1334,22 +1336,22 @@ function RwaDetailPage() {
                                             children: "Asset Image"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 141,
                                             columnNumber: 25
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 140,
                                         columnNumber: 22
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                    lineNumber: 137,
+                                    lineNumber: 139,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 136,
+                                lineNumber: 138,
                                 columnNumber: 13
                             }, this),
                             isOwner && rwa.complianceRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1360,12 +1362,12 @@ function RwaDetailPage() {
                                             children: "Admin: Whitelist Management"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 146,
+                                            lineNumber: 148,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 146,
+                                        lineNumber: 148,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1373,24 +1375,24 @@ function RwaDetailPage() {
                                             tokenId: tokenId
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 148,
+                                            lineNumber: 150,
                                             columnNumber: 25
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 147,
+                                        lineNumber: 149,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 145,
+                                lineNumber: 147,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                        lineNumber: 134,
+                        lineNumber: 136,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1404,12 +1406,12 @@ function RwaDetailPage() {
                                             children: "Buy Asset"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 157,
+                                            lineNumber: 159,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 157,
+                                        lineNumber: 159,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1425,7 +1427,7 @@ function RwaDetailPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 160,
+                                                        lineNumber: 162,
                                                         columnNumber: 29
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1433,13 +1435,13 @@ function RwaDetailPage() {
                                                         children: "per share"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 161,
+                                                        lineNumber: 163,
                                                         columnNumber: 29
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 159,
+                                                lineNumber: 161,
                                                 columnNumber: 25
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1453,7 +1455,7 @@ function RwaDetailPage() {
                                                         className: "w-20"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 164,
+                                                        lineNumber: 166,
                                                         columnNumber: 29
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1463,25 +1465,25 @@ function RwaDetailPage() {
                                                         children: isBuyLoading ? "Buying..." : "Buy Now"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 171,
+                                                        lineNumber: 173,
                                                         columnNumber: 29
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 163,
+                                                lineNumber: 165,
                                                 columnNumber: 25
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 158,
+                                        lineNumber: 160,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 156,
+                                lineNumber: 158,
                                 columnNumber: 18
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1492,12 +1494,12 @@ function RwaDetailPage() {
                                             children: "Key Information"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 180,
+                                            lineNumber: 182,
                                             columnNumber: 29
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 180,
+                                        lineNumber: 182,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1510,7 +1512,7 @@ function RwaDetailPage() {
                                                         children: "Type:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 182,
+                                                        lineNumber: 184,
                                                         columnNumber: 59
                                                     }, this),
                                                     " ",
@@ -1518,13 +1520,13 @@ function RwaDetailPage() {
                                                         children: rwa.rwaType
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 182,
+                                                        lineNumber: 184,
                                                         columnNumber: 78
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 182,
+                                                lineNumber: 184,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1534,7 +1536,7 @@ function RwaDetailPage() {
                                                         children: "Share:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 183,
+                                                        lineNumber: 185,
                                                         columnNumber: 59
                                                     }, this),
                                                     " ",
@@ -1545,13 +1547,13 @@ function RwaDetailPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 183,
+                                                        lineNumber: 185,
                                                         columnNumber: 79
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 183,
+                                                lineNumber: 185,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1561,7 +1563,7 @@ function RwaDetailPage() {
                                                         children: "My Balance:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 184,
+                                                        lineNumber: 186,
                                                         columnNumber: 59
                                                     }, this),
                                                     " ",
@@ -1569,13 +1571,13 @@ function RwaDetailPage() {
                                                         children: rwa.balance
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 184,
+                                                        lineNumber: 186,
                                                         columnNumber: 84
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 184,
+                                                lineNumber: 186,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1585,7 +1587,7 @@ function RwaDetailPage() {
                                                         children: "Compliance:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 186,
+                                                        lineNumber: 188,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1593,13 +1595,13 @@ function RwaDetailPage() {
                                                         children: rwa.complianceRequired ? 'Whitelist Active' : 'Open'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 187,
+                                                        lineNumber: 189,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 187,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1609,7 +1611,7 @@ function RwaDetailPage() {
                                                         children: "Status:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 192,
+                                                        lineNumber: 194,
                                                         columnNumber: 25
                                                     }, this),
                                                     parseInt(rwa.lockupEndDate) * 1000 > Date.now() ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1617,20 +1619,20 @@ function RwaDetailPage() {
                                                         children: "Locked"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 194,
+                                                        lineNumber: 196,
                                                         columnNumber: 30
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                         variant: "secondary",
                                                         children: "Tradable"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                        lineNumber: 196,
+                                                        lineNumber: 198,
                                                         columnNumber: 29
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 191,
+                                                lineNumber: 193,
                                                 columnNumber: 21
                                             }, this),
                                             parseInt(rwa.lockupEndDate) > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1641,19 +1643,19 @@ function RwaDetailPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                                lineNumber: 200,
+                                                lineNumber: 202,
                                                 columnNumber: 25
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 181,
+                                        lineNumber: 183,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 179,
+                                lineNumber: 181,
                                 columnNumber: 13
                             }, this),
                             isOwner && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1664,12 +1666,12 @@ function RwaDetailPage() {
                                             children: "Admin: Deposit Revenue"
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 209,
+                                            lineNumber: 211,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 209,
+                                        lineNumber: 211,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$3$2e$5_react$2d$dom$40$19$2e$1$2e$0_react$40$19$2e$1$2e$0_$5f$react$40$19$2e$1$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1677,36 +1679,36 @@ function RwaDetailPage() {
                                             tokenId: tokenId
                                         }, void 0, false, {
                                             fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                            lineNumber: 211,
+                                            lineNumber: 213,
                                             columnNumber: 25
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                        lineNumber: 210,
+                                        lineNumber: 212,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                                lineNumber: 208,
+                                lineNumber: 210,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                        lineNumber: 154,
+                        lineNumber: 156,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-                lineNumber: 133,
+                lineNumber: 135,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/rwa/[tokenId]/page.tsx",
-        lineNumber: 126,
+        lineNumber: 128,
         columnNumber: 5
     }, this);
 }

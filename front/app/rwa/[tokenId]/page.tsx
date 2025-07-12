@@ -80,15 +80,17 @@ export default function RwaDetailPage() {
         return;
       }
       try {
-        const totalValue = parseFloat(rwa.price) * parseInt(buyAmount, 10);
-        const valueInWei = parseEther(totalValue.toString());
+        // Use BigInt for calculation to avoid floating point errors
+        const pricePerTokenWei = parseEther(rwa.price);
+        const amountToBuy = BigInt(buyAmount);
+        const totalValueWei = pricePerTokenWei * amountToBuy;
 
         writeContract({
             address: rwaContractAddress as `0x${string}`,
             abi: rwaContractAbi,
             functionName: 'buyRwa',
-            args: [BigInt(tokenId), BigInt(buyAmount)],
-            value: valueInWei,
+            args: [BigInt(tokenId), amountToBuy],
+            value: totalValueWei,
         })
       } catch (e) {
           toast.error("Transaction Error", {

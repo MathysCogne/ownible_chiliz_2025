@@ -153,23 +153,20 @@ contract RWA1155 is ERC1155, Ownable {
             uint256 tokenId = ids[i];
             RWAData storage rwa = rwaMetadata[tokenId];
 
-            // 1. Check Lock-up period
-            // The owner/operator can bypass the lock-up to distribute tokens initially.
-            if (from != owner() && from != address(0) && block.timestamp < rwa.lockupEndDate) {
-                revert("RWA1155: Token is locked");
+            // Do not check for transfers initiated by the contract owner (e.g. initial distribution)
+            // or for minting/burning operations.
+            if (from != owner() && from != address(0)) {
+                // 1. Check Lock-up period
+                if (block.timestamp < rwa.lockupEndDate) {
+                    revert("RWA1155: Token is locked");
+                }
             }
 
-            // 2. Check Compliance / Whitelist
-            // Transfer is allowed if:
-            // - Compliance is not required for this token
-            // - The sender is the owner (initial distribution)
-            // - The receiver is on the whitelist
-            // - It's a burn or mint operation
+            // 2. Check Compliance / Whitelist for the receiver
+            // This applies to all transfers, including sales from the owner.
             if (
                 rwa.complianceRequired &&
-                from != owner() &&
-                to != address(0) &&
-                from != address(0) &&
+                to != address(0) && // Allow burning
                 !isWhitelisted(tokenId, to)
             ) {
                 revert("RWA1155: Receiver not whitelisted for this token");
