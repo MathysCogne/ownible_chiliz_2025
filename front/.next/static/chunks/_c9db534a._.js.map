@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///home/matt/Documents/dev/ownible_chiliz_2025/front/app/page.tsx"],"sourcesContent":["'use client'\n\nimport { redirect } from 'next/navigation'\n\nexport default function RootPage() {\n  redirect('/market')\n  return null // Return null to ensure nothing is rendered\n} "],"names":[],"mappings":";;;AAEA;AAFA;;AAIe,SAAS;IACtB,CAAA,GAAA,oQAAA,CAAA,WAAQ,AAAD,EAAE;IACT,OAAO,KAAK,4CAA4C;;AAC1D;KAHwB","debugId":null}},
-    {"offset": {"line": 29, "column": 0}, "map": {"version":3,"sources":["file:///home/matt/Documents/dev/ownible_chiliz_2025/front/node_modules/.pnpm/next%4015.3.5_react-dom%4019.1.0_react%4019.1.0__react%4019.1.0/node_modules/next/navigation.js"],"sourcesContent":["module.exports = require('./dist/client/components/navigation')\n"],"names":[],"mappings":"AAAA,OAAO,OAAO","ignoreList":[0],"debugId":null}}]
-}
