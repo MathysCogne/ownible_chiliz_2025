@@ -21,12 +21,12 @@ export function NavMain({
   const pathname = usePathname();
 
   return (
-    <SidebarMenu>
+        <SidebarMenu>
       {items.map((item) => {
         const isActive = pathname === item.url;
 
         const buttonContent = (
-          <SidebarMenuButton
+            <SidebarMenuButton
             className={cn(
               'w-full rounded-lg p-3 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white',
               isActive && 'bg-neutral-800 text-white',
@@ -35,7 +35,7 @@ export function NavMain({
           >
             {item.icon && <item.icon className="size-5 shrink-0" />}
             {!isCollapsed && <span className="ml-4 text-base">{item.title}</span>}
-          </SidebarMenuButton>
+            </SidebarMenuButton>
         );
 
         return (
@@ -53,6 +53,6 @@ export function NavMain({
           </SidebarMenuItem>
         );
       })}
-    </SidebarMenu>
+        </SidebarMenu>
   );
 }
