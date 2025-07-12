@@ -3,7 +3,7 @@ import { createPublicClient, http, getContract, parseEther, formatEther } from '
 import { spicyTestnet } from '@/lib/wagmi';
 
 // Update the contract address to match your latest deployment
-const CONTRACT_ADDRESS = "0x6F8B7f23B72FAb6a30251bcD531A26800C038B89" as const;
+const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32" as const;
 
 // Complete ABI based on your contract
 const CONTRACT_ABI = [
@@ -52,10 +52,12 @@ const CONTRACT_ABI = [
       {"internalType": "string", "name": "category", "type": "string"},
       {"internalType": "uint256", "name": "valuation", "type": "uint256"},
       {"internalType": "uint256", "name": "totalFragments", "type": "uint256"},
-      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
       {"internalType": "bool", "name": "isNFT", "type": "bool"},
       {"internalType": "bool", "name": "isTransferable", "type": "bool"},
-      {"internalType": "address", "name": "issuer", "type": "address"}
+      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
+      {"internalType": "address", "name": "owner", "type": "address"},
+      {"internalType": "string", "name": "metadataURI", "type": "string"},
+      {"internalType": "string", "name": "imageURI", "type": "string"}
     ],
     "stateMutability": "view",
     "type": "function"
@@ -106,7 +108,9 @@ const CONTRACT_ABI = [
       {"internalType": "uint256", "name": "valuation", "type": "uint256"},
       {"internalType": "uint256", "name": "totalFragments", "type": "uint256"},
       {"internalType": "bool", "name": "isNFT", "type": "bool"},
-      {"internalType": "bool", "name": "isTransferable", "type": "bool"}
+      {"internalType": "bool", "name": "isTransferable", "type": "bool"},
+      {"internalType": "string", "name": "metadataURI", "type": "string"},
+      {"internalType": "string", "name": "imageURI", "type": "string"}
     ],
     "name": "createAsset",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
@@ -187,10 +191,12 @@ export async function GET(request: NextRequest) {
           category: asset[1],
           valuation: formatEther(asset[2]),
           totalFragments: asset[3].toString(),
-          remainingFragments: asset[4].toString(),
-          isNFT: asset[5],
-          isTransferable: asset[6],
-          issuer: asset[7]
+          remainingFragments: asset[6].toString(),
+          isNFT: asset[4],
+          isTransferable: asset[5],
+          owner: asset[7],
+          metadataURI: asset[8],
+          imageURI: asset[9]
         });
 
       case 'getFragmentInfo':
@@ -249,10 +255,12 @@ export async function GET(request: NextRequest) {
               category: asset[1],
               valuation: formatEther(asset[2]),
               totalFragments: asset[3].toString(),
-              remainingFragments: asset[4].toString(),
-              isNFT: asset[5],
-              isTransferable: asset[6],
-              issuer: asset[7],
+              remainingFragments: asset[6].toString(),
+              isNFT: asset[4],
+              isTransferable: asset[5],
+              owner: asset[7],
+              metadataURI: asset[8],
+              imageURI: asset[9],
               fragmentInfo: {
                 totalSupply: fragmentInfo[0].toString(),
                 availableSupply: fragmentInfo[1].toString(),

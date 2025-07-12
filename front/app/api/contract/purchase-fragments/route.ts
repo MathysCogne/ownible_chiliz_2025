@@ -6,9 +6,9 @@ const CONTRACT_ABI = [
   {
     "inputs": [
       {"internalType": "uint256", "name": "assetId", "type": "uint256"},
-      {"internalType": "uint256", "name": "fragmentAmount", "type": "uint256"}
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
     ],
-    "name": "purchaseFragments",
+    "name": "buyFragments",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -27,7 +27,7 @@ const CONTRACT_ABI = [
   }
 ] as const;
 
-const CONTRACT_ADDRESS = "0x6F8B7f23B72FAb6a30251bcD531A26800C038B89" as const;
+const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32" as const;
 
 const publicClient = createPublicClient({
   chain: spicyTestnet,

@@ -5,7 +5,7 @@ import { spicyTestnet } from '@/lib/wagmi';
 const CONTRACT_ABI = [
   {
     "inputs": [{"internalType": "uint256", "name": "assetId", "type": "uint256"}],
-    "name": "purchaseFullOwnership",
+    "name": "buyFullOwnership",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -18,17 +18,19 @@ const CONTRACT_ABI = [
       {"internalType": "string", "name": "category", "type": "string"},
       {"internalType": "uint256", "name": "valuation", "type": "uint256"},
       {"internalType": "uint256", "name": "totalFragments", "type": "uint256"},
-      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
       {"internalType": "bool", "name": "isNFT", "type": "bool"},
       {"internalType": "bool", "name": "isTransferable", "type": "bool"},
-      {"internalType": "address", "name": "issuer", "type": "address"}
+      {"internalType": "uint256", "name": "remainingFragments", "type": "uint256"},
+      {"internalType": "address", "name": "owner", "type": "address"},
+      {"internalType": "string", "name": "metadataURI", "type": "string"},
+      {"internalType": "string", "name": "imageURI", "type": "string"}
     ],
     "stateMutability": "view",
     "type": "function"
   }
 ] as const;
 
-const CONTRACT_ADDRESS = "0x6F8B7f23B72FAb6a30251bcD531A26800C038B89" as const;
+const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32" as const;
 
 const publicClient = createPublicClient({
   chain: spicyTestnet,
@@ -53,8 +55,8 @@ export async function POST(request: NextRequest) {
 
     const asset = await contract.read.assets([BigInt(assetId)]);
     const valuation = asset[2]; // asset.valuation
-    const remainingFragments = asset[4]; // asset.remainingFragments
-    const isNFT = asset[5]; // asset.isNFT
+    const remainingFragments = asset[6]; // asset.remainingFragments (new index)
+    const isNFT = asset[4]; // asset.isNFT
 
     if (remainingFragments === BigInt(0)) {
       return NextResponse.json({ error: 'No fragments available for purchase' }, { status: 400 });
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
     // Return transaction parameters for frontend to execute
     return NextResponse.json({
       contractAddress: CONTRACT_ADDRESS,
-      functionName: "purchaseFullOwnership",
+      functionName: "buyFullOwnership",
       args: [assetId],
       value: totalCost.toString(),
       gasLimit: 500000,

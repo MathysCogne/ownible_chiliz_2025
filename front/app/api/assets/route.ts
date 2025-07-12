@@ -7,7 +7,8 @@ export async function GET() {
     const assetCount = await contract.read.getAssetCount();
     const assets = [];
     
-    for (let i = 0; i < Number(assetCount); i++) {
+    // Fix: Commence à 1, pas 0
+    for (let i = 1; i <= Number(assetCount); i++) {
       try {
         const asset = await contract.read.assets([BigInt(i)]);
         assets.push({
@@ -16,10 +17,12 @@ export async function GET() {
           category: asset[1],
           valuation: asset[2].toString(),
           totalFragments: asset[3].toString(),
-          remainingFragments: asset[4].toString(),
-          isNFT: asset[5],
-          isTransferable: asset[6],
-          issuer: asset[7],
+          remainingFragments: asset[6].toString(), // Fix: index 6, pas 4
+          isNFT: asset[4],
+          isTransferable: asset[5],
+          owner: asset[7],
+          metadataURI: asset[8], // IPFS metadata URI
+          imageURI: asset[9]     // IPFS image URI
         });
       } catch (error) {
         console.error(`Error fetching asset ${i}:`, error);
