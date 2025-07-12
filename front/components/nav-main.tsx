@@ -1,58 +1,93 @@
 "use client"
 
-import { type Icon } from '@tabler/icons-react';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  IconLayoutDashboard,
+  IconHome,
+  IconUsers,
+  IconShoppingCart,
+  IconFileText,
+} from "@tabler/icons-react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export function NavMain({
-  items,
   isCollapsed,
+  isMobile,
 }: {
-  items: {
-    title: string;
-    url: string;
-    icon?: Icon;
-  }[];
-  isCollapsed?: boolean;
+  isCollapsed: boolean
+  isMobile: boolean
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname()
+
+  const links = [
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: IconLayoutDashboard,
+    },
+    {
+      href: "/dashboard/market",
+      label: "Market",
+      icon: IconShoppingCart,
+    },
+    {
+      href: "/dashboard/portfolio",
+      label: "Portfolio",
+      icon: IconHome,
+    },
+    {
+      href: "/dashboard/white-paper",
+      label: "White Paper",
+      icon: IconFileText,
+    },
+  ]
+
+  const NavLink = ({
+    href,
+    label,
+    icon: Icon,
+  }: {
+    href: string
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+  }) => (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Link
+          href={href}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-neutral-400 transition-all hover:bg-neutral-800 hover:text-white",
+            pathname === href && "bg-neutral-800 text-white",
+            isCollapsed && "justify-center"
+          )}
+        >
+          <Icon className="h-5 w-5" />
+          <span className={cn("text-sm font-medium", isCollapsed && "hidden")}>
+            {label}
+          </span>
+        </Link>
+      </TooltipTrigger>
+      {isCollapsed && !isMobile && (
+        <TooltipContent side="right" className="flex items-center gap-4">
+          {label}
+        </TooltipContent>
+      )}
+    </Tooltip>
+  )
 
   return (
-    <SidebarMenu>
-      {items.map((item) => {
-        const isActive = pathname === item.url;
-
-        const buttonContent = (
-          <SidebarMenuButton
-            className={cn(
-              'w-full rounded-lg p-3 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white',
-              isActive && 'bg-neutral-800 text-white',
-              isCollapsed ? 'justify-center' : 'justify-start px-4'
-            )}
-          >
-            {item.icon && <item.icon className="size-5 shrink-0" />}
-            {!isCollapsed && <span className="ml-4 text-base">{item.title}</span>}
-          </SidebarMenuButton>
-        );
-
-        return (
-          <SidebarMenuItem key={item.title} className="px-2 py-1">
-            <Link href={item.url} passHref>
-              {isCollapsed ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>{buttonContent}</TooltipTrigger>
-                  <TooltipContent side="right">{item.title}</TooltipContent>
-                </Tooltip>
-              ) : (
-                buttonContent
-              )}
-            </Link>
-          </SidebarMenuItem>
-        );
-      })}
-    </SidebarMenu>
-  );
+    <div
+      data-collapsed={isCollapsed}
+      className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
+    >
+      <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+        {links.map((link) => (
+          <NavLink key={link.href} {...link} />
+        ))}
+      </nav>
+    </div>
+  )
 }
