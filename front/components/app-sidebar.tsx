@@ -1,28 +1,12 @@
 "use client"
 
 import * as React from "react"
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Home, Package, Shield } from 'lucide-react'
+import { useWallet } from "@/contexts/wallet-context"
+import { getContractInfo } from "@/lib/api"
 
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -32,149 +16,99 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { WalletButton } from "./wallet/wallet-button"
+import { cn } from "@/lib/utils"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
-}
+const navItems = [
+  { href: '/', label: 'Marketplace', icon: Home },
+  { href: '/collection', label: 'My Collection', icon: Package },
+]
+
+const adminNavItems = [
+    { href: '/admin', label: 'Admin', icon: Shield },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const pathname = usePathname()
+    const { address, isConnected } = useWallet()
+    const [isOwner, setIsOwner] = React.useState(false)
+
+    React.useEffect(() => {
+        async function checkOwner() {
+            if(isConnected && address) {
+                // Hardcoded address for development access
+                if (address.toLowerCase() === "0x0519e602ab8a321a5fd90f4d44149fbf7c4cb296") {
+                    setIsOwner(true);
+                    return;
+                }
+                try {
+                    const info = await getContractInfo();
+                    setIsOwner(address.toLowerCase() === info.owner.toLowerCase());
+                } catch (error) {
+                    setIsOwner(false);
+                }
+            } else {
+                setIsOwner(false);
+            }
+        }
+        checkOwner();
+    }, [isConnected, address])
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
+             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link href="/" className="font-bold text-chiliz-red text-lg">
+                OWNIBLE
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <div className="flex flex-col gap-2">
+            {navItems.map((item) => (
+            <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-neutral-400 transition-all hover:text-white hover:bg-neutral-800",
+                    pathname === item.href && "bg-neutral-800 text-white"
+                )}
+            >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+            </Link>
+            ))}
+        </div>
+        {isOwner && (
+            <>
+                <div className="my-4 border-t border-neutral-800 -mx-4"></div>
+                <div className="flex flex-col gap-2">
+                    {adminNavItems.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-neutral-400 transition-all hover:text-white hover:bg-neutral-800",
+                            pathname === item.href && "bg-neutral-800 text-white"
+                        )}
+                    >
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                    </Link>
+                    ))}
+                </div>
+            </>
+        )}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <WalletButton />
       </SidebarFooter>
     </Sidebar>
   )

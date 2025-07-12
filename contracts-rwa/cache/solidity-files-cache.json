@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/matt/Documents/dev/ownible_chiliz_2025/contracts-rwa/contracts/RWA1155.sol": {
-      "lastModificationDate": 1752270218136,
-      "contentHash": "bec8d9e49e6fd4cf150ad927cf461c27",
+      "lastModificationDate": 1752316965648,
+      "contentHash": "e262c4c63972184ca3aa6b154981b4fd",
       "sourceName": "contracts/RWA1155.sol",
       "solcConfig": {
         "version": "0.8.17",
