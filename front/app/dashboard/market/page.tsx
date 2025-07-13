@@ -48,7 +48,9 @@ function MarketView() {
         // The API returns assets, but the UI needs some extra fields like price, change, volume24h
         // We will need to either add this to the API or calculate it here.
         // For now, let's use valuation as price and add dummy data for the rest.
-        const processedAssets = data.assets.map((asset: Omit<Asset, 'price'>) => ({
+        const processedAssets = data.assets
+          .filter((asset: { name: string }) => !/test/i.test(asset.name))
+          .map((asset: Omit<Asset, 'price'>) => ({
           ...asset,
           price: (parseFloat(asset.valuation) / 10**18) / parseFloat(asset.totalFragments),
           type: getAssetTypeFromCategory(asset.category), // using category to derive type
