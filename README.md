@@ -4,6 +4,10 @@
 
 <div align="center">
   <img src="front/public/logo.png" alt="Ownible Logo" width="200"/>
+  <img src="front/public/bann_1.png" alt="Banner Ownible Logo" width="200"/>
+  <img src="front/public/bann_2.png" alt="Banner Ownible Logo" width="200"/>
+  <img src="front/public/bann_3.png" alt="Banner Ownible Logo" width="200"/>
+  <img src="front/public/bann_4.png" alt="Banner Ownible Logo" width="200"/>
 </div>
 
 ---
@@ -13,8 +17,12 @@
 **🏆 A Chiliz Hacking Paris 2025 Submission 🏆**
 
   <a href="https://ownible-chiliz-2025.vercel.app/">Live Demo</a>
-  
+
   <a href="https://ownible-chiliz-2025.vercel.app/dashboard/white-paper">White Paper</a>
+
+
+  **Address Contract:**
+- 0x0a28af612331710a3C6227c81fC26e01C6c88B32
 
 </div>
 
@@ -39,8 +47,7 @@ Imagine owning a fraction of a classic album's rights, a piece of iconic sports 
 
 ## 🛠️ Tech Stack
 
-**Address Contract:**
-- 0x0000000000000000000000000000000000000000
+
 
 - Next.js
 - Tailwind CSS
