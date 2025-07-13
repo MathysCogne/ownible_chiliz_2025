@@ -4,8 +4,6 @@
 
 <div align="center">
   <img src="front/public/logo.png" alt="Ownible Logo" width="200"/>
-  <a href="https://ownible-chiliz-2025.vercel.app/">Live Demo</a>
-  <a href="https://ownible-chiliz-2025.vercel.app/dashboard/white-paper">White Paper</a>
 </div>
 
 ---
@@ -13,6 +11,10 @@
 <div align="center">
 
 **🏆 A Chiliz Hacking Paris 2025 Submission 🏆**
+
+  <a href="https://ownible-chiliz-2025.vercel.app/">Live Demo</a>
+  
+  <a href="https://ownible-chiliz-2025.vercel.app/dashboard/white-paper">White Paper</a>
 
 </div>
 
