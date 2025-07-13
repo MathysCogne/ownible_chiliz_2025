@@ -171,12 +171,6 @@ const AssetPage = () => {
     return notFound();
   }
   
-  const formatCurrency = (value: number) => {
-    if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`;
-    if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
-    return `$${value.toFixed(2)}`;
-  };
-  
   const rwaDescription = {
     'Sport': `This is more than a collectible; it's a verifiable stake in ${asset.name}. As an owner, your investment is tied to real-world performance and value. Join a community of dedicated fans and invest in the moments that define the game.`,
     'E-Sport': `Acquiring a piece of ${asset.name} makes you a direct stakeholder in the e-sport economy. Whether it's a share of player contracts or team revenue, you own a piece of the action. Experience premium, decentralized ownership.`,

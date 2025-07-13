@@ -6,6 +6,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartConfig,
 } from "@/components/ui/chart"
 
 export interface AllocationData {
@@ -22,7 +23,7 @@ export function PortfolioAllocationChart({ data }: PortfolioAllocationChartProps
   const chartConfig = data.reduce((acc, item) => {
     acc[item.category] = { label: item.category, color: item.fill };
     return acc;
-  }, {} as any);
+  }, {} as ChartConfig);
 
   return (
     <ChartContainer

@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { ConnectWalletButton } from '@/components/connect-wallet-button';
 import { DotLoader } from '@/components/ui/dot-loader';
@@ -32,7 +31,7 @@ const CanvasScene = dynamic(() => import('@/components/canvas-scene'), {
 });
 
 
-export const LandingPage = () => {
+export default function LandingPage() {
   const title = 'Own a Piece of the Action.';
   const subtitle = 'The RWA platform for sports & entertainment collectibles, powered by Chiliz.';
 
@@ -58,6 +57,4 @@ export const LandingPage = () => {
     </div>
   );
 };
-
-export default LandingPage;
 

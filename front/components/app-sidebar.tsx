@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { IconCompass, IconBuildingStore, IconWallet, IconSettings } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -12,29 +11,6 @@ import {
   SidebarHeader,
   useSidebar,
 } from '@/components/ui/sidebar';
-
-const navMain = [
-  {
-    title: 'Discover',
-    url: '/dashboard',
-    icon: IconCompass,
-  },
-  {
-    title: 'Market',
-    url: '/dashboard/market',
-    icon: IconBuildingStore,
-  },
-  {
-    title: 'Portfolio',
-    url: '/dashboard/portfolio',
-    icon: IconWallet,
-  },
-  {
-    title: 'Admin',
-    url: '/dashboard/admin',
-    icon: IconSettings,
-  },
-];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { setOpen, state } = useSidebar();
@@ -68,7 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent className="flex-1">
-        <NavMain items={navMain} isCollapsed={state === 'collapsed'} />
+        <NavMain isCollapsed={state === 'collapsed'} isMobile={false} />
       </SidebarContent>
     </Sidebar>
   );

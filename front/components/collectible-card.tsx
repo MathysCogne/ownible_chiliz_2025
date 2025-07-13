@@ -10,7 +10,6 @@ import {
   IconDeviceGamepad2,
   IconBallFootball,
 } from '@tabler/icons-react';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 interface CollectibleCardProps {
@@ -37,7 +36,7 @@ export function CollectibleCard({ asset }: CollectibleCardProps) {
   const ChangeIcon = isPositiveChange ? IconTrendingUp : IconTrendingDown;
   const priceChangeColor = isPositiveChange ? 'text-green-400' : 'text-red-400';
   const AssetIcon = getAssetIcon(asset.type);
-  const remainingFragments = Number(asset.totalFragments) - (asset.ownedFragments || 0);
+  // const remainingFragments = Number(asset.totalFragments) - (asset.ownedFragments || 0);
   const ownershipPercentage = asset.ownedFragments ? (asset.ownedFragments / Number(asset.totalFragments)) * 100 : 0;
 
   return (

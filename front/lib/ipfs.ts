@@ -67,6 +67,7 @@ export async function uploadImageToIPFS(image: File | string): Promise<string> {
 }
 
 // Upload metadata to IPFS
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function uploadMetadataToIPFS(metadata: any): Promise<string> {
   try {
     const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {

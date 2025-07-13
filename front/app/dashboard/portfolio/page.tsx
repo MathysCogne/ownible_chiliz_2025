@@ -8,15 +8,15 @@ import { Button } from '@/components/ui/button';
 import { SimpleTable } from '@/components/ui/simple-table';
 import { columns } from './columns';
 import { PortfolioAsset } from '@/lib/types';
-import { IconWallet, IconChartBar, IconBuildingStore, IconChartPie } from '@tabler/icons-react';
+import { IconChartPie } from '@tabler/icons-react';
 import { formatChz, formatUsd, CHZ_TO_USD_RATE } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PortfolioAllocationChart, AllocationData } from '@/components/portfolio-allocation-chart';
-import { ChartConfig } from '@/components/ui/chart';
+
 
 
 // A single, reusable component for the summary stats
-const StatCard = ({ title, value, subValue, description, icon: Icon }: { title: string, value: string, subValue?: string, description: string, icon: React.ElementType }) => (
+const StatCard = ({ title, value, subValue, description }: { title: string, value: string, subValue?: string, description: string }) => (
     <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-6 flex flex-col justify-between transition-all hover:border-neutral-700 hover:bg-neutral-900">
         <div className="flex flex-row items-center justify-between space-y-0 pb-2">
             <h3 className="text-sm font-medium text-neutral-400">{title}</h3>
@@ -49,7 +49,7 @@ export default function PortfolioPage() {
         if (!response.ok) throw new Error('Failed to fetch portfolio');
         const data = await response.json();
 
-        const processedAssets = data.assets.map((asset: any): PortfolioAsset => ({
+        const processedAssets = (data.assets as (Omit<PortfolioAsset, 'price' | 'quantity'> & { quantity: string })[]).map((asset): PortfolioAsset => ({
           ...asset,
           price: (parseFloat(asset.valuation) / 10**18) / parseFloat(asset.totalFragments),
           quantity: parseInt(asset.quantity, 10),
@@ -103,12 +103,6 @@ export default function PortfolioPage() {
     };
   }, [assets]);
   
-  const formatCurrency = (value: number) => {
-    if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(2)}M`;
-    if (value >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
-    return `$${value.toFixed(2)}`;
-  };
-
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 text-center h-64">
@@ -147,20 +141,17 @@ export default function PortfolioPage() {
             value={`${formatChz(portfolioSummary.totalValue)} CHZ`}
             subValue={formatUsd(portfolioSummary.totalValue * CHZ_TO_USD_RATE)}
             description="The current estimated value of all your assets."
-            icon={IconWallet}
         />
         <StatCard 
             title="Total Assets"
             value={portfolioSummary.totalAssets.toString()}
             description="The number of unique assets in your portfolio."
-            icon={IconBuildingStore}
         />
         <StatCard 
             title="Overall Return"
             value={`+${formatChz(portfolioSummary.totalReturn)} CHZ`}
             subValue={`(+${formatUsd(portfolioSummary.totalReturn * CHZ_TO_USD_RATE)})`}
             description="Est. return. Purchase price tracking coming soon."
-            icon={IconChartBar}
         />
       </div>
 
@@ -171,7 +162,7 @@ export default function PortfolioPage() {
             ) : (
                 <div className="flex flex-col items-center justify-center gap-4 text-center h-full min-h-[400px] rounded-lg border-2 border-dashed border-neutral-800">
                     <h2 className="text-2xl font-bold text-white">Your Portfolio is Ready</h2>
-                    <p className="text-neutral-400 max-w-md">You haven't invested in any assets yet. Browse our marketplace to find assets that match your passion and start building your collection.</p>
+                    <p className="text-neutral-400 max-w-md">You haven&apos;t invested in any assets yet. Browse our marketplace to find assets that match your passion and start building your collection.</p>
                     <Button asChild>
                         <Link href="/dashboard/market">Start Investing</Link>
                     </Button>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,

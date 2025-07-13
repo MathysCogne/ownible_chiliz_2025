@@ -7,11 +7,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   IconLayoutDashboard,
   IconHome,
-  IconUsers,
   IconShoppingCart,
   IconFileText,
 } from "@tabler/icons-react"
-import { useIsMobile } from "@/hooks/use-mobile"
 
 export function NavMain({
   isCollapsed,

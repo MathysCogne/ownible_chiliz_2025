@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import { Asset } from '@/lib/types';
 import { IconArrowDown, IconChartPie, IconCash, IconArrowsExchange, IconTrendingUp } from '@tabler/icons-react';
-import { cn } from '@/lib/utils';
 
 interface MarketStatsProps {
   assets: Asset[];
@@ -35,9 +34,9 @@ export function MarketStats({ assets, totalMarketCap, isAllCategory }: MarketSta
       return { marketCap: 0, volume24h: 0, avgChange: 0, dominance: 0 };
     }
 
-    const marketCap = assets.reduce((acc, asset) => acc + asset.price, 0);
-    const volume24h = assets.reduce((acc, asset) => acc + asset.volume24h, 0);
-    const totalChange = assets.reduce((acc, asset) => acc + asset.change, 0);
+    const marketCap = assets.reduce((acc, asset) => acc + (asset?.price || 0), 0);
+    const volume24h = assets.reduce((acc, asset) => acc + (asset?.volume24h || 0), 0);
+    const totalChange = assets.reduce((acc, asset) => acc + (asset?.change || 0), 0);
 
     return {
       marketCap,

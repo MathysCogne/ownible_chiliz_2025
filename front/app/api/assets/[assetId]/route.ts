@@ -6,7 +6,8 @@ import { CONTRACT_ADDRESS } from '@/lib/contract';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { assetId?: string } }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { params }: any
 ) {
   try {
     const { assetId } = await params;

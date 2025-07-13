@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPublicClient, http, getContract, parseEther, formatEther } from 'viem';
+import { createPublicClient, http, getContract, formatEther } from 'viem';
 import { spicyTestnet } from '@/lib/wagmi';
 
 

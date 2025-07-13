@@ -4,7 +4,8 @@ import { isAddress } from 'viem';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { address?: string } }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { params }: any
 ) {
   try {
     const { address: userAddress } = await params;
