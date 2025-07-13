@@ -4,7 +4,7 @@ export type FragmentOwner = {
   percentage: string;
 };
 
-export type Asset = {
+export interface Asset {
   id: number;
   name: string;
   category: string;
@@ -27,10 +27,11 @@ export type Asset = {
   change?: number;
   volume24h?: number;
   ownedFragments?: number; // This can be calculated from fragmentOwners
+  projectedYield?: number;
   quantity?: number; // Used in portfolio view
 };
 
 // The portfolio view adds the 'quantity' field to the base Asset type
-export type PortfolioAsset = Asset & {
+export interface PortfolioAsset extends Asset {
   quantity: number;
-}; 
+} 

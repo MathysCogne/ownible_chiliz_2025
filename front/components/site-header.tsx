@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { CHZ_TO_USD_RATE, formatUsd } from '@/lib/utils';
 
 export function SiteHeader() {
   const { address, isConnected } = useAccount();
@@ -31,11 +32,16 @@ export function SiteHeader() {
       );
     }
     if (balance) {
+      const balanceChz = parseFloat(balance.formatted);
+      const balanceUsd = balanceChz * CHZ_TO_USD_RATE;
       return (
-        <div className="flex items-center font-semibold">
-          {parseFloat(balance.formatted).toFixed(2)}
-          <span className="text-neutral-400 ml-1.5 mr-1.5">{balance.symbol}</span>
-          <IconPepper className="size-4 text-red-500" />
+        <div className="flex flex-col items-end font-semibold leading-tight">
+          <div className="flex items-center">
+            {balanceChz.toFixed(2)}
+            <span className="text-neutral-400 ml-1.5 mr-1">{balance.symbol}</span>
+            <IconPepper className="size-4 text-red-500" />
+          </div>
+          <span className="text-xs text-neutral-500">{formatUsd(balanceUsd)}</span>
         </div>
       );
     }
@@ -93,7 +99,7 @@ export function SiteHeader() {
                 <span>
                   {balance
                     ? `${parseFloat(balance.formatted).toFixed(2)} ${balance.symbol}`
-                    : 'Loading...'}
+                    : "Loading..."}
                 </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-neutral-800" />

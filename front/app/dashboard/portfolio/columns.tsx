@@ -3,14 +3,14 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { IconArrowUpRight } from '@tabler/icons-react';
+import { IconArrowUpRight, IconPepper } from '@tabler/icons-react';
 import { PortfolioAsset } from '@/lib/types';
 import { formatChz, formatUsd, CHZ_TO_USD_RATE } from '@/lib/utils';
 
 export const columns: ColumnDef<PortfolioAsset>[] = [
   {
     accessorKey: 'name',
-    header: 'Asset',
+    header: 'RWA',
     cell: ({ row }) => (
       <div>
         <div className="font-medium text-white">{row.original.name}</div>
@@ -26,15 +26,24 @@ export const columns: ColumnDef<PortfolioAsset>[] = [
     ),
   },
   {
+    id: 'projectedYield',
+    header: () => <div className="text-right">Projected Yield</div>,
+    cell: ({ row }) => {
+      return <div className="text-right font-mono text-green-400">{row.original.projectedYield?.toFixed(2) || 'N/A'}%</div>;
+    },
+  },
+  {
     accessorKey: 'currentValue',
-    header: () => <div className="text-right">Current Value</div>,
+    header: () => <div className="text-right">Holdings Value</div>,
     cell: ({ row }) => {
       const valueInChz = (row.original.price || 0) * (row.original.quantity || 0);
       const valueInUsd = valueInChz * CHZ_TO_USD_RATE;
       return (
         <div className="text-right">
-          <div className="font-semibold text-white">{formatChz(valueInChz)} CHZ</div>
-          <div className="text-xs text-neutral-400">{formatUsd(valueInUsd)}</div>
+          <div className="font-semibold text-white">{formatUsd(valueInUsd)}</div>
+          <div className="flex items-center justify-end gap-1 text-xs text-neutral-400">
+            {formatChz(valueInChz)} <IconPepper className="size-3 text-red-500" />
+          </div>
         </div>
       )
     },
