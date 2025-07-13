@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { IconCompass, IconBuildingStore, IconWallet } from '@tabler/icons-react';
+import { IconCompass, IconBuildingStore, IconWallet, IconSettings } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -28,6 +28,11 @@ const navMain = [
     title: 'Portfolio',
     url: '/dashboard/portfolio',
     icon: IconWallet,
+  },
+  {
+    title: 'Admin',
+    url: '/dashboard/admin',
+    icon: IconSettings,
   },
 ];
 

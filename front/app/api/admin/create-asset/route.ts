@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { createWalletClient, http } from 'viem';
+import { NextRequest, NextResponse } from 'next/server';
+import { createWalletClient, http, parseEther } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { spicyTestnet } from '@/lib/wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/lib/contract';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { 
       name, 
@@ -13,46 +13,34 @@ export async function POST(request: Request) {
       totalFragments, 
       isNFT, 
       isTransferable, 
-      metadataURI, 
-      imageURI 
+      metadataUri,
+      imageUri
     } = await request.json();
 
-    // Validate required fields
-    if (!name || !category || !valuation || !totalFragments) {
+    if (!name || !category || !valuation || !totalFragments || !metadataUri) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, category, valuation, totalFragments' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Validate IPFS metadata URI is provided
-    if (!metadataURI || metadataURI.trim() === '') {
-      return NextResponse.json(
-        { error: 'Metadata URI is required for IPFS integration' },
-        { status: 400 }
-      );
-    }
-
-    // You'll need to set your private key in environment variables
-    const rawKey = process.env.PRIVATE_KEY;
+    const rawKey = process.env.ADMIN_PRIVATE_KEY;
     if (!rawKey) {
       return NextResponse.json(
-        { error: 'Private key not configured' },
+        { error: 'ADMIN_PRIVATE_KEY not configured' },
         { status: 500 }
       );
     }
 
-    // Add 0x prefix if not present - viem expects properly formatted hex string
     const formattedKey = rawKey.startsWith('0x') ? rawKey : `0x${rawKey}`;
-
     const account = privateKeyToAccount(formattedKey as `0x${string}`);
+    
     const walletClient = createWalletClient({
       account,
       chain: spicyTestnet,
       transport: http(),
     });
 
-    // Create the asset with IPFS metadata
     const hash = await walletClient.writeContract({
       address: CONTRACT_ADDRESS,
       abi: CONTRACT_ABI,
@@ -60,18 +48,19 @@ export async function POST(request: Request) {
       args: [
         name, 
         category, 
-        BigInt(valuation), 
+        parseEther(valuation),
         BigInt(totalFragments), 
         isNFT || false, 
-        isTransferable !== false, // Default to true if not specified
-        metadataURI,
-        imageURI || ""
+        isTransferable !== false,
+        metadataUri,
+        imageUri || ""
       ],
+      account,
     });
 
     return NextResponse.json({
       success: true,
-      transactionHash: hash,
+      txHash: hash,
       message: 'Asset creation transaction sent'
     });
 
@@ -85,4 +74,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+} 

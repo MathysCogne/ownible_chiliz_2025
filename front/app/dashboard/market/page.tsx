@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense, useMemo } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { assets } from "@/lib/mock-data"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { CollectibleCard } from "@/components/collectible-card"
 import { MarketStats } from "@/components/market-stats"
@@ -14,6 +13,9 @@ import {
   IconMusic,
   IconHome
 } from "@tabler/icons-react"
+import { Asset } from "@/lib/types" // Import the new Asset type
+import { Skeleton } from "@/components/ui/skeleton"
+import { getAssetTypeFromCategory } from "@/lib/utils"
 
 const assetTypes = [
   { name: "All", icon: IconCategory },
@@ -29,6 +31,43 @@ function MarketView() {
   const searchParams = useSearchParams()
   const initialCategory = searchParams.get("category") || "All"
   const [filter, setFilter] = useState(initialCategory)
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch("/api/assets/with-owners")
+        if (!response.ok) {
+          throw new Error("Failed to fetch assets")
+        }
+        const data = await response.json()
+        
+        // The API returns assets, but the UI needs some extra fields like price, change, volume24h
+        // We will need to either add this to the API or calculate it here.
+        // For now, let's use valuation as price and add dummy data for the rest.
+        const processedAssets = data.assets.map((asset: any) => ({
+          ...asset,
+          price: (parseFloat(asset.valuation) / 10**18) / parseFloat(asset.totalFragments),
+          type: getAssetTypeFromCategory(asset.category), // using category to derive type
+          change: Math.random() * 10 - 5, // DUMMY DATA
+          volume24h: Math.random() * 100000, // DUMMY DATA
+          ownedFragments: Number(asset.totalFragments) - Number(asset.remainingFragments),
+        }));
+        
+        setAssets(processedAssets)
+        setError(null)
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "An unknown error occurred")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAssets()
+  }, [])
 
   useEffect(() => {
     setFilter(initialCategory)
@@ -56,16 +95,16 @@ function MarketView() {
   const pageTitle = filter === 'All' ? 'Explore Market' : `Explore ${filter} Assets`;
   
   const categoryDescriptions: { [key: string]: string } = {
-    All: "Explore a curated selection of Real World Assets (RWA). From iconic sports memorabilia to fractional ownership of music rights, each asset represents a verifiable, tokenized piece of the real world.",
-    Sport: "Invest in the world of sports. These assets represent tangible value, from shares in player earnings to exclusive event access, all backed by real-world performance.",
-    'E-Sport': "Dive into the digital arena with tangible assets. Own a piece of the action, from player contracts to team revenues, and be part of the booming e-sport economy.",
-    Music: "Own the sound. These assets grant you fractional ownership of music rights, allowing you to earn from royalties and share in the success of your favorite artists.",
-    'Real Estate': "Access the property market like never before. These assets represent fractional ownership of real-world properties, offering a tangible stake in valuable real estate."
+    All: "Explore a new era of investing. From music rights to sports memorabilia, every asset on our platform represents a verifiable, tokenized piece of the real world. Connect your wallet in seconds and start building your collection.",
+    Sport: "Own a piece of sporting history. Invest in player shares, iconic memorabilia, or exclusive event access. Your passion, your asset. Join a community of fans and investors.",
+    'E-Sport': "Enter the digital arena as an owner. Invest in player contracts, team revenues, and prize pools. Be more than a fan—be part of the booming e-sport economy with verifiable ownership.",
+    Music: "Invest directly in the music you love. Purchase fractional ownership of song rights, earn from royalties, and share in the success of your favorite artists. True ownership, powered by the blockchain.",
+    'Real Estate': "Access the property market, tokenized. Invest in fractional ownership of high-value real estate. A tangible stake in a stable market, made accessible through our secure, decentralized platform."
   };
 
   const pageDescription = categoryDescriptions[filter] || 'Find the next asset to add to your collection.';
 
-  const totalMarketCap = useMemo(() => assets.reduce((acc, asset) => acc + asset.price, 0), []);
+  const totalMarketCap = useMemo(() => assets.reduce((acc, asset) => acc + asset.price, 0), [assets]);
 
   return (
     <div className="flex flex-col">
@@ -110,11 +149,33 @@ function MarketView() {
       </div>
       
       <div className="p-8">
-        {filteredAssets.length > 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {filteredAssets.map((asset) => (
-              <CollectibleCard key={asset.id} asset={asset} />
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="h-[300px] w-full rounded-xl" />
             ))}
+          </div>
+        ) : error ? (
+          <div className="mt-16 flex flex-col items-center justify-center gap-4 text-center text-red-500">
+            <h3 className="text-xl font-bold">Error</h3>
+            <p>{error}</p>
+          </div>
+        ) : filteredAssets.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <AnimatePresence>
+              {filteredAssets.map((asset) => (
+                <motion.div
+                  key={asset.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CollectibleCard asset={asset} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="mt-16 flex flex-col items-center justify-center gap-4 text-center">

@@ -1,33 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPublicClient, http, getContract, parseEther } from 'viem';
+import { createPublicClient, http, getContract } from 'viem';
 import { spicyTestnet } from '@/lib/wagmi';
-
-const CONTRACT_ABI = [
-  {
-    "inputs": [
-      {"internalType": "uint256", "name": "assetId", "type": "uint256"},
-      {"internalType": "uint256", "name": "amount", "type": "uint256"}
-    ],
-    "name": "buyFragments",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "assetId", "type": "uint256"}],
-    "name": "getFragmentInfo",
-    "outputs": [
-      {"internalType": "uint256", "name": "totalSupply", "type": "uint256"},
-      {"internalType": "uint256", "name": "availableSupply", "type": "uint256"},
-      {"internalType": "uint256", "name": "pricePerUnit", "type": "uint256"},
-      {"internalType": "bool", "name": "isActive", "type": "bool"}
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-] as const;
-
-const CONTRACT_ADDRESS = "0x0a28af612331710a3C6227c81fC26e01C6c88B32" as const;
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/lib/contract';
 
 const publicClient = createPublicClient({
   chain: spicyTestnet,
@@ -43,20 +17,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Asset ID and fragment amount required' }, { status: 400 });
     }
 
-    // Get fragment info to calculate cost
     const contract = getContract({
       address: CONTRACT_ADDRESS,
       abi: CONTRACT_ABI,
       client: publicClient,
     });
 
-    const fragmentInfo = await contract.read.getFragmentInfo([BigInt(assetId)]);
-    const pricePerUnit = fragmentInfo[2]; // pricePerUnit
-    const availableSupply = fragmentInfo[1]; // availableSupply
-    const isActive = fragmentInfo[3]; // isActive
+    // Fetch asset data directly from the public 'assets' mapping
+    const assetData = await contract.read.assets([BigInt(assetId)]);
+    const valuation = assetData[2];
+    const totalFragments = assetData[3];
+    const availableSupply = assetData[6];
+    const isTransferable = assetData[5];
 
-    if (!isActive) {
-      return NextResponse.json({ error: 'Asset is not active' }, { status: 400 });
+    if (!isTransferable) {
+      return NextResponse.json({ error: 'Asset is not transferable' }, { status: 400 });
     }
 
     if (BigInt(fragmentAmount) > availableSupply) {
@@ -64,19 +39,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate total cost
-    const totalCost = pricePerUnit * BigInt(fragmentAmount);
+    const totalCost = (valuation * BigInt(fragmentAmount)) / totalFragments;
 
     // Return transaction parameters for frontend to execute
     return NextResponse.json({
       contractAddress: CONTRACT_ADDRESS,
-      functionName: "purchaseFragments",
+      functionName: "buyFragments",
       args: [assetId, fragmentAmount],
       value: totalCost.toString(),
-      gasLimit: 400000,
-      gasPrice: "2501000000000", // 2501 gwei
-      estimatedCost: totalCost.toString(),
-      pricePerUnit: pricePerUnit.toString(),
-      availableSupply: availableSupply.toString()
     });
   } catch (error) {
     console.error('Purchase fragments API error:', error);

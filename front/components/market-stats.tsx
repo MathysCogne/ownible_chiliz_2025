@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Asset } from '@/lib/mock-data';
+import { Asset } from '@/lib/types';
 import { IconArrowDown, IconChartPie, IconCash, IconArrowsExchange, IconTrendingUp } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 

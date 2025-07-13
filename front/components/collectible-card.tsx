@@ -1,7 +1,15 @@
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
-import { Asset, getAssetIcon } from '@/lib/mock-data';
-import { IconTrendingDown, IconTrendingUp, IconChevronRight } from '@tabler/icons-react';
+import { cn, formatIpfsUrl, formatChz, formatUsd, CHZ_TO_USD_RATE } from '@/lib/utils';
+import { Asset } from '@/lib/types';
+import { 
+  IconTrendingDown, 
+  IconTrendingUp, 
+  IconChevronRight,
+  IconMusic,
+  IconHome,
+  IconDeviceGamepad2,
+  IconBallFootball,
+} from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -9,13 +17,28 @@ interface CollectibleCardProps {
   asset: Asset;
 }
 
+const getAssetIcon = (type: Asset["type"]) => {
+  switch (type) {
+    case "Sport":
+      return IconBallFootball
+    case "E-Sport":
+      return IconDeviceGamepad2
+    case "Music":
+      return IconMusic
+    case "Real Estate":
+      return IconHome
+    default:
+      return IconBallFootball
+  }
+}
+
 export function CollectibleCard({ asset }: CollectibleCardProps) {
-  const isPositiveChange = asset.change >= 0;
+  const isPositiveChange = asset.change && asset.change >= 0;
   const ChangeIcon = isPositiveChange ? IconTrendingUp : IconTrendingDown;
   const priceChangeColor = isPositiveChange ? 'text-green-400' : 'text-red-400';
   const AssetIcon = getAssetIcon(asset.type);
-  const remainingFragments = asset.totalFragments - asset.ownedFragments;
-  const ownershipPercentage = (asset.ownedFragments / asset.totalFragments) * 100;
+  const remainingFragments = Number(asset.totalFragments) - (asset.ownedFragments || 0);
+  const ownershipPercentage = asset.ownedFragments ? (asset.ownedFragments / Number(asset.totalFragments)) * 100 : 0;
 
   return (
     <Link href={`/dashboard/market/${asset.id}`} className="block h-full">
@@ -23,7 +46,7 @@ export function CollectibleCard({ asset }: CollectibleCardProps) {
         
         <div className="absolute inset-0 z-0">
           <Image
-            src="/mock_asset.png"
+            src={formatIpfsUrl(asset.imageURI)}
             alt={asset.name}
             fill
             className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
@@ -45,19 +68,20 @@ export function CollectibleCard({ asset }: CollectibleCardProps) {
               </div>
               <div className={cn('flex items-center gap-1 text-sm font-semibold', priceChangeColor)}>
                 <ChangeIcon size={16} />
-                <span>{asset.change.toFixed(1)}%</span>
+                <span>{asset.change ? asset.change.toFixed(1) : 'N/A'}%</span>
               </div>
             </div>
             
             <div>
-              <span className="text-xs text-neutral-500">Price</span>
-              <p className="text-2xl font-bold text-white">${asset.price.toFixed(2)}</p>
+              <span className="text-xs text-neutral-500">Price per Fragment</span>
+              <p className="text-2xl font-bold text-white">{formatChz(asset.price)} CHZ</p>
+              <p className="text-sm text-neutral-400">{formatUsd(asset.price * CHZ_TO_USD_RATE)}</p>
             </div>
 
             <div>
               <div className="mb-1 flex justify-between text-xs">
                 <span className="text-neutral-400">Fragments Owned</span>
-                <span className="font-medium text-neutral-200">{asset.ownedFragments} / {asset.totalFragments}</span>
+                <span className="font-medium text-neutral-200">{asset.ownedFragments || 0} / {asset.totalFragments}</span>
               </div>
               <div className="w-full bg-neutral-700/50 rounded-full h-1.5">
                 <div
